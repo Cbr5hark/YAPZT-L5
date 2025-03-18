@@ -17,8 +17,6 @@ using namespace std;
 
 // Constants
 namespace Constants {
-    const string USERNAME = "admin";
-    const string PASSWORD = "pass";
     const int MAX_PRISONERS = 20;
     const int BASE_CELL_NUMBER = 1001;
     const int MAX_LOGIN_ATTEMPTS = 3;
@@ -349,7 +347,7 @@ public:
 
 private:
     bool validateCredentials(const string& username, const string& password) const {
-        return (username == Constants::USERNAME && password == Constants::PASSWORD);
+        return (username == "admin" && password == "pass");
     }
 };
 
