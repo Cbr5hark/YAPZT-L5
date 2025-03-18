@@ -1,0 +1,6 @@
+projectKey=123s
+serverUrl=http://localhost:9000
+serverVersion=25.3.0.104237
+dashboardUrl=http://localhost:9000/dashboard?id=123s
+ceTaskId=5e3d5158-949d-46ed-b5a0-de59ee9d22f5
+ceTaskUrl=http://localhost:9000/api/ce/task?id=5e3d5158-949d-46ed-b5a0-de59ee9d22f5
