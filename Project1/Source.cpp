@@ -2,742 +2,998 @@
 
 // username = admin
 // password = pass
-
 #define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <conio.h>
-#include <string>
+#include <string.h>
 #include <windows.h>
 #include <fstream>
 #include <ctime>
-#include <vector>
-#include <iomanip>
-#include <algorithm>
-
 using namespace std;
 
-// Constants
-namespace Constants {
-    const int MAX_PRISONERS = 20;
-    const int BASE_CELL_NUMBER = 1001;
-    const int MAX_LOGIN_ATTEMPTS = 3;
+void FrontPage(); // Front Page Or Main Page
+void Date();      // Getting Date
+void Time();      // Display time
+
+class Prison
+{
+private:
+    // Detaiils of Prisoner
+    string First_Name[20] = { " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " " };
+    string Second_Name[20];
+    string Gender[20];
+    int CellNo[20] = { 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020 };
+    int Age[20];
+    double Height[20];
+    string Eyecolor[20];
+    string Crime[20];
+    int Punishmentmonths[20];
+    int o = 0;
+
+public:
+    void SetData();      // Set data of the prisoners
+    void Details();      // Getting details of the prisoners
+    void Afterlogin();   // After login page OR Menu function
+    void Attendance();   // Storing attendace of the prisoners
+    void Release();      // Release the prisoners
+    void SearchPrison(); // Search Prison
+    void PrisonFile();   // Priosn File
+    void Logout();       // Logout
+    void Exit();         // Exit function
+    void Login();        //login
+};
+
+void Prison::Logout()
+{
+    system("cls");
+    cout << "\n\n\n\n\n\n\t\t\t\t\t";
+    cout << "logging out ";
+
+    for (int x = 0; x < 15; x++)
+    {
+        for (int a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << ".";
+    }
+    Prison::Login();
 }
 
-// Utility functions
-class Utils {
-public:
-    static void displayDateTime() {
-        time_t currentTime = time(nullptr);
-        tm timeInfo;
-		localtime_s(&timeInfo, &currentTime);
+void Prison::Login()
+{
 
-        cout << "Time: " << setfill('0') << setw(2) << timeInfo.tm_hour << ":"
-            << setfill('0') << setw(2) << timeInfo.tm_min << ":"
-            << setfill('0') << setw(2) << timeInfo.tm_sec << endl;
+    char Username[15];
+    char Password[15];
+    char Epwd;
+    int true1 = 1;
+    int try1 = 0;
+    int i = 0;
 
-        cout << "Date: " << timeInfo.tm_mday << "/"
-            << timeInfo.tm_mon + 1 << "/" << timeInfo.tm_year + 1900 << "\n";
-    }
-
-    static void displayLoadingAnimation(const string& message, int numDots = 15) {
-        cout << "\n\t\t\t\t" << message;
-        for (int i = 0; i < numDots; i++) {
-            Sleep(30);
-            cout << ".";
+    do
+    {
+        system("cls");
+        Time();
+        cout << "\n\n\n\n\n\n";
+        int a;
+        for (a = 0; a <= 100000000; a++)
+        {
         }
-        cout << endl;
-    }
-
-    static void displayHeader(const string& title) {
-        system("cls");
-        displayDateTime();
-
-        cout << "\t\t\t\t    -----------------------------------------------------\n";
-        cout << "\t\t\t\t    |                                                   |\n";
-
-        int total_width = 51;
-        int text_width = title.length();
-        int left_padding = (total_width - text_width) / 2;
-        int right_padding = total_width - text_width - left_padding;
-
-        cout << "\t\t\t\t    |" << setfill(' ') << setw(left_padding) << " "
-            << title
-            << setfill(' ') << setw(right_padding) << " " << "|\n";
-
-        cout << "\t\t\t\t    |                                                   |\n";
-        cout << "\t\t\t\t    -----------------------------------------------------\n\n";
-    }
-
-    static void pause() {
-        cout << "\n\t\t\t\tPress any key to continue...";
-        _getch();
-    }
-
-    static void clearScreen() {
-        system("cls");
-    }
-
-    static string securePasswordInput() {
-        string password;
-        char ch;
-
-        while (true) {
-            ch = _getch();
-            if (ch == 13) // Enter key
-                break;
-            else if (ch == 8) { // Backspace
-                if (!password.empty()) {
-                    password.pop_back();
-                    cout << "\b \b";
-                }
-            }
-            else if (ch >= 32 && ch <= 126) { // Printable characters
-                password += ch;
+        cout << "\t\t\t\t    ----------------------------------------\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t    |   PRISON STATION MANAGEMENT SYSTEM   |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t    ----------------------------------------\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\n\n";
+        cout << "\t\t\t\t\t";
+        cout << "Username : ";
+        cin >> Username;
+        cout << "\t\t\t\t\t";
+        cout << "\n";
+        cout << "\t\t\t\t\t";
+        cout << "Password : ";
+        for (i = 0;;)
+        {
+            Epwd = _getch();
+            if ((Epwd >= 'a' && Epwd <= 'z') || (Epwd >= 'A' && Epwd <= 'Z') || (Epwd >= '0' && Epwd <= '9'))
+            {
+                Password[i] = Epwd;
+                ++i;
                 cout << "*";
             }
-        }
-
-        return password;
-    }
-};
-
-// Prisoner class to represent a single prisoner
-class Prisoner {
-private:
-    string firstName;
-    string secondName;
-    string gender;
-    int cellNo;
-    int age;
-    double height;
-    string eyeColor;
-    string crime;
-    int punishmentMonths;
-    bool isOccupied;
-
-public:
-    // Constructor
-    explicit Prisoner(int cellId = 0) :
-        firstName(""), secondName(""), gender(""),
-        cellNo(Constants::BASE_CELL_NUMBER + cellId),
-        age(0), height(0.0), eyeColor(""), crime(""),
-        punishmentMonths(0), isOccupied(false) {}
-
-    // Getters
-    string getFirstName() const { return firstName; }
-    string getSecondName() const { return secondName; }
-    string getFullName() const { return firstName + " " + secondName; }
-    string getGender() const { return gender; }
-    int getCellNo() const { return cellNo; }
-    int getAge() const { return age; }
-    double getHeight() const { return height; }
-    string getEyeColor() const { return eyeColor; }
-    string getCrime() const { return crime; }
-    int getPunishmentMonths() const { return punishmentMonths; }
-    bool isCell() const { return isOccupied; }
-
-    // Setters
-    void setFirstName(const string& name) { firstName = name; }
-    void setSecondName(const string& name) { secondName = name; }
-    void setGender(const string& g) { gender = g; }
-    void setAge(int a) { age = a; }
-    void setHeight(double h) { height = h; }
-    void setEyeColor(const string& color) { eyeColor = color; }
-    void setCrime(const string& c) { crime = c; }
-    void setPunishmentMonths(int months) { punishmentMonths = months; }
-    void setOccupied(bool status) { isOccupied = status; }
-
-    // Methods
-    void decreasePunishment() {
-        if (punishmentMonths > 0) {
-            punishmentMonths--;
-        }
-    }
-
-    bool isReadyForRelease() const { return punishmentMonths <= 0; }
-
-    void clearData() {
-        firstName.clear();
-        secondName.clear();
-        gender.clear();
-        age = 0;
-        height = 0.0;
-        eyeColor.clear();
-        crime.clear();
-        punishmentMonths = 0;
-        isOccupied = false;
-    }
-};
-
-// Data export formats
-class DataExporter {
-public:
-    virtual ~DataExporter() = default;
-    virtual void exportData(const vector<Prisoner>& prisoners, const string& fileName) const = 0;
-};
-
-class TxtExporter : public DataExporter {
-public:
-    void exportData(const vector<Prisoner>& prisoners, const string& fileName) const override {
-        ofstream outputFile(fileName);
-        if (!outputFile) {
-            cerr << "Error opening file: " << fileName << endl;
-            return;
-        }
-
-        outputFile << "\t\t\t\t    -----------------------------------------------------\n";
-        outputFile << "\t\t\t\t    |                                                   |\n";
-        outputFile << "\t\t\t\t    |                Prisoner list                      |\n";
-        outputFile << "\t\t\t\t    |                                                   |\n";
-        outputFile << "\t\t\t\t    -----------------------------------------------------\n";
-
-        outputFile << "\n=====================================================================================================================\n";
-        outputFile << "SR.\tNAME\t\t\tCell Block\tAge\t\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
-        outputFile << "=======================================================================================================================\n";
-
-        int count = 0;
-        for (const auto& prisoner : prisoners) {
-            if (prisoner.isCell()) {
-                count++;
-                outputFile << count << "\t"
-                    << prisoner.getFullName() << "\t\t"
-                    << prisoner.getCellNo() << "\t"
-                    << prisoner.getAge() << "\t\t"
-                    << prisoner.getGender() << "\t"
-                    << prisoner.getHeight() << "\t\t"
-                    << prisoner.getEyeColor() << "\t\t"
-                    << prisoner.getCrime() << "\t\t"
-                    << prisoner.getPunishmentMonths() << endl;
-                outputFile << "\n" << endl;
+            if (Epwd == '\b' && i >= 1)
+            {
+                cout << "\b \b";
+                --i;
+            }
+            if (Epwd == '\r')
+            {
+                Password[i] = '\0';
+                break;
             }
         }
 
-        outputFile.close();
-    }
-};
-
-class HtmlExporter : public DataExporter {
-public:
-    void exportData(const vector<Prisoner>& prisoners, const string& fileName) const override {
-        ofstream outputFile(fileName);
-        if (!outputFile) {
-            cerr << "Error opening file: " << fileName << endl;
-            return;
+        if (strcmp(Username, "admin") == 0 && strcmp(Password, "pass") == 0)
+        {
+            cout << "\n\n";
+            cout << "\t\t\t\t";
+            cout << "You are accessed to the system!\n\n";
+            cout << "\t\t\t\t";
+            system("pause");
+            system("cls");
+            true1 = 0;
+            try1 = 4;
+            Prison::Afterlogin();
         }
+        else
+        {
+            system("cls");
+            try1 = try1 + 1;
+            cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+            cout << "\t\t\t\t\t";
+            cout << "No. of attempts remain: " << 3 - try1;
+            cout << "\n\n";
+            cout << "\t\t\t\t";
+            system("pause");
 
-        outputFile << "<!DOCTYPE html>\n<html>\n<head>\n<title>Prison Data</title>\n";
-        outputFile << "<style>table { border-collapse: collapse; width: 100%; }\n";
-        outputFile << "th, td { border: 1px solid black; padding: 8px; text-align: left; }\n";
-        outputFile << "th { background-color: #f2f2f2; }</style>\n</head>\n<body>\n\n";
-        outputFile << "<h2>Prison Station Management System - Prisoner List</h2>\n";
-        outputFile << "<table>\n<tr>\n";
-        outputFile << "<th>Name</th>\n<th>Cell Block</th>\n<th>Age</th>\n<th>Gender</th>\n";
-        outputFile << "<th>Height</th>\n<th>Eye Color</th>\n<th>Crime</th>\n<th>Punishment</th>\n</tr>\n";
-
-        for (const auto& prisoner : prisoners) {
-            if (prisoner.isCell()) {
-                outputFile << "<tr>\n";
-                outputFile << "<td>" << prisoner.getFullName() << "</td>\n";
-                outputFile << "<td>" << prisoner.getCellNo() << "</td>\n";
-                outputFile << "<td>" << prisoner.getAge() << "</td>\n";
-                outputFile << "<td>" << prisoner.getGender() << "</td>\n";
-                outputFile << "<td>" << prisoner.getHeight() << "</td>\n";
-                outputFile << "<td>" << prisoner.getEyeColor() << "</td>\n";
-                outputFile << "<td>" << prisoner.getCrime() << "</td>\n";
-                outputFile << "<td>" << prisoner.getPunishmentMonths() << "</td>\n";
-                outputFile << "</tr>\n";
-            }
-        }
-
-        outputFile << "</table>\n</body>\n</html>";
-        outputFile.close();
-    }
-};
-
-class DocExporter : public DataExporter {
-public:
-    void exportData(const vector<Prisoner>& prisoners, const string& fileName) const override {
-        ofstream outputFile(fileName);
-        if (!outputFile) {
-            cerr << "Error opening file: " << fileName << endl;
-            return;
-        }
-
-        outputFile << "\t\t\t *** Prisoner list *** \n\n";
-
-        for (const auto& prisoner : prisoners) {
-            if (prisoner.isCell()) {
-                outputFile << "First name: " << prisoner.getFirstName() << "\n";
-                outputFile << "Second name: " << prisoner.getSecondName() << "\n";
-                outputFile << "Cell number: " << prisoner.getCellNo() << "\n";
-                outputFile << "Age: " << prisoner.getAge() << "\n";
-                outputFile << "Gender: " << prisoner.getGender() << "\n";
-                outputFile << "Height: " << prisoner.getHeight() << "\n";
-                outputFile << "Eye colour: " << prisoner.getEyeColor() << "\n";
-                outputFile << "Crime: " << prisoner.getCrime() << "\n";
-                outputFile << "Punishment Months: " << prisoner.getPunishmentMonths() << "\n\n";
-            }
-        }
-
-        outputFile.close();
-    }
-};
-
-// Factory for creating exporters
-class ExporterFactory {
-public:
-    static unique_ptr<DataExporter> createExporter(int formatChoice) {
-        switch (formatChoice) {
-        case 1: return make_unique<TxtExporter>();
-        case 2: return make_unique<HtmlExporter>();
-        case 3: return make_unique<DocExporter>();
-        default: return nullptr;
-        }
-    }
-};
-
-// Authentication Manager
-class AuthManager {
-private:
-    bool isLoggedIn;
-
-public:
-    AuthManager() : isLoggedIn(false) {}
-
-    bool login() {
-        string username, password;
-        int attempts = 0;
-
-        while (attempts < Constants::MAX_LOGIN_ATTEMPTS) {
-            Utils::clearScreen();
-            Utils::displayDateTime();
-
-            cout << "\n\n\n\n\n\n";
-            cout << "\t\t\t\t    ----------------------------------------\n";
-            cout << "\t\t\t\t    |   PRISON STATION MANAGEMENT SYSTEM   |\n";
-            cout << "\t\t\t\t    ----------------------------------------\n\n\n";
-
-            cout << "\t\t\t\t\tUsername: ";
-            cin >> username;
-
-            cout << "\n\t\t\t\t\tPassword: ";
-            password = Utils::securePasswordInput();
-
-            if (validateCredentials(username, password)) {
-                cout << "\n\n\t\t\t\tYou are accessed to the system!\n\n";
-                cout << "\t\t\t\t";
-				Utils::pause();
-                isLoggedIn = true;
-                return true;
-            }
-            else {
-                attempts++;
-                Utils::clearScreen();
-                cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-                cout << "\t\t\t\t\tNo. of attempts remain: "
-                    << Constants::MAX_LOGIN_ATTEMPTS - attempts;
-                cout << "\n\n\t\t\t\t";
-                Utils::pause();
-            }
-        }
-
-        cout << "\n\t\t\t\tNo permission to enter the system!\n\n";
-        cout << "\t\t\t\t";
-        Utils::pause();
-        return false;
-    }
-
-    void logout() {
-        isLoggedIn = false;
-    }
-
-    bool isAuthenticated() const {
-        return isLoggedIn;
-    }
-
-private:
-    bool validateCredentials(const string& username, const string& password) const {
-        return (username == "admin" && password == "pass");
-    }
-};
-
-// Prison Management System class
-class PrisonManagementSystem {
-private:
-    vector<Prisoner> prisoners;
-    AuthManager authManager;
-
-    // Helper methods
-    void displayPrisonerTable(const string& title) const {
-        Utils::displayHeader(title);
-
-        cout << "\n===========================================================================================================\n";
-        cout << left << setw(20) << "NAME"
-            << setw(15) << "Cell Block"
-            << setw(8) << "Age"
-            << setw(10) << "Gender"
-            << setw(10) << "Height"
-            << setw(15) << "Eye Colour"
-            << setw(15) << "Crime"
-            << "Punishment\n";
-        cout << "===========================================================================================================\n";
-        int count = 0;
-        for (const auto& prisoner : prisoners) {
-            if (prisoner.isCell()) {
-                cout << left << setw(20) << prisoner.getFullName()
-                    << setw(15) << prisoner.getCellNo()
-                    << setw(8) << prisoner.getAge()
-                    << setw(10) << prisoner.getGender()
-                    << setw(10) << prisoner.getHeight()
-                    << setw(15) << prisoner.getEyeColor()
-                    << setw(15) << prisoner.getCrime()
-                    << prisoner.getPunishmentMonths() << endl;
+            if (try1 >= 3)
+            {
+                cout << "\t\t\t\t\t\t";
                 cout << "\n";
-                count++;
+                cout << "\t\t\t\t";
+                cout << "No permission to enter the system!\n\n";
+                cout << "\t\t\t\t";
+                system("pause");
+                exit;
             }
         }
+    } while (try1 < 3);
+}
 
-        if (count == 0) {
-            cout << "\n\t\t\t\tNo prisoners present\n";
+void Prison::SetData()
+{
+    system("cls");
+    Time();
+    int a, s;
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    -----------------------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    |                                                   |\n";
+    cout << "\t\t\t\t    |         Enter basic information of prisoner       |\n";
+    cout << "\t\t\t\t    |                                                   |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    -----------------------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\n\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter first name : ";
+    cin >> First_Name[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter second name : ";
+    cin >> Second_Name[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter gender : ";
+    cin >> Gender[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter age : ";
+    cin >> Age[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter height : ";
+    cin >> Height[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter eyecolor : ";
+    cin >> Eyecolor[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter crime : ";
+    cin >> Crime[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Enter punishment span in months : ";
+    cin >> Punishmentmonths[o];
+    cout << "\t\t\t\t\t";
+    cout << "\n\n\n";
+    cout << "\t\t\t\t\t";
+    cout << "Your Cell No is " << CellNo[o];
+    cout << "\n\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    o = o + 1;
+    cout << "Press 1 to return : ";
+    scanf("%d", &s);
+    if (s == 1)
+    {
+        Prison::Afterlogin();
+    }
+}
+
+void Prison::Details()
+{
+    system("cls");
+    Time();
+    int t;
+    for (t = 0; t <= 100000000; t++)
+    {
+    }
+    cout << "\t\t\t\t    -----------------------------------------------------\n";
+    for (t = 0; t <= 100000000; t++)
+    {
+    }
+    cout << "\t\t\t\t    |                                                   |\n";
+    cout << "\t\t\t\t    |                Prisoner list                      |\n";
+    cout << "\t\t\t\t    |                                                   |\n";
+    for (t = 0; t <= 100000000; t++)
+    {
+    }
+    cout << "\t\t\t\t    -----------------------------------------------------\n";
+    for (t = 0; t <= 100000000; t++)
+    {
+    }
+    int s, c = 0, p = 0;
+
+    cout << "\n\t\t\t\t\t";
+
+    cout << "\n===========================================================================================================\n";
+    cout << "SR.\tNAME\t\t\tCell Block\tAge\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
+    cout << "===========================================================================================================\n";
+
+    for (int x = 0; x <= 19; x++)
+    {
+        if (First_Name[x] != " ")
+        {
+            p++;
+            cout << p << "\t" << First_Name[x] << "" << Second_Name[x] << "\t\t" << CellNo[x] << "\t\t" << Age[x] << "\t" << Gender[x] << "\t" << Height[x] << "\t" << Eyecolor[x] << "\t\t" << Crime[x] << "\t\t" << Punishmentmonths[x] << endl;
+            cout << "\n"
+                << endl;
+            c++;
         }
     }
-
-    void displayMenu() const {
-        cout << "\n\n\n";
-        cout << "\t\t\t\t---------------------------------------------------------------------------\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     1)   New prisoner entry                             |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     2)   Prisoner details                               |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     3)   Attendance prisoner                            |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     4)   Release prisoner                               |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     5)   Search prisoner                                |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     6)   Prison File                                    |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     7)   Logout                                         |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t|                     8)   Exit                                           |\n";
-        cout << "\t\t\t\t|                                                                         |\n";
-        cout << "\t\t\t\t---------------------------------------------------------------------------\n";
-    }
-
-    int getCellIndexFromNumber(int cellNumber) const {
-        return cellNumber - Constants::BASE_CELL_NUMBER;
-    }
-
-    int findFreeCellIndex() const {
-        for (size_t i = 0; i < prisoners.size(); i++) {
-            if (!prisoners[i].isCell()) {
-                return static_cast<int>(i);
-            }
-        }
-        return -1;
-    }
-
-    bool hasPrisoners() const {
-        return any_of(prisoners.begin(), prisoners.end(),
-            [](const Prisoner& p) { return p.isCell(); });
-    }
-
-    bool isValidCellIndex(int index) const {
-        return index >= 0 && index < static_cast<int>(prisoners.size()) && prisoners[index].isCell();
-    }
-
-    template <typename Action>
-    void processPrisonerAction(const Action& action) {
-        char choice;
-        do {
-            displayPrisonerTable("Prisoner Management");
-
-            if (!hasPrisoners()) {
-                Utils::pause();
-                return;
-            }
-
-            int cellNumber;
-            cout << "\n\t\t\t\tEnter the cell block of the prisoner: ";
-            cin >> cellNumber;
-
-            int index = getCellIndexFromNumber(cellNumber);
-            if (isValidCellIndex(index)) {
-                cout << "\n\t\t\t\tName: " << prisoners[index].getFullName();
-                action(index);
-            }
-            else {
-                cout << "\n\t\t\t\tInvalid cell number or empty cell!";
-            }
-
-            cout << "\n\n\t\t\t\tPress 'y' to choose another prisoner or any other key to exit: ";
-            cin >> choice;
-        } while (choice == 'y' || choice == 'Y');
-
-        Utils::pause();
-    }
-
-public:
-    // Constructor
-    PrisonManagementSystem() {
-        // Initialize prisoners with cell numbers
-        prisoners.resize(Constants::MAX_PRISONERS);
-        for (int i = 0; i < Constants::MAX_PRISONERS; i++) {
-            prisoners[i] = Prisoner(i);
-        }
-    }
-
-    // Main functions
-    void run() {
-        frontPage();
-
-        if (authManager.login()) {
-            mainMenu();
-        }
-    }
-
-    void frontPage() const {
-        Utils::clearScreen();
-        Utils::displayDateTime();
-
+    if (c == 0)
+    {
+        cout << "\n\t\t\t\t\t";
+        cout << "No prisoner Present";
         cout << "\n";
-        cout << "\t\t\t\t    ----------------------------------------\n";
-        cout << "\t\t\t\t    |   PRISON STATION MANAGEMENT SYSTEM   |\n";
-        cout << "\t\t\t\t    ----------------------------------------\n";
-
-        cout << "\n\n\t\t\t\tMini Project   :   Prison Management System";
-        cout << "\n\n\n\n\n\t\t\t\t";
-        Utils::pause();
-
-        Utils::displayLoadingAnimation("Loading", 15);
+        cout << "\t\t\t\t\t";
     }
-
-    void mainMenu() {
-        int choice;
-
-        do {
-            Utils::clearScreen();
-            Utils::displayDateTime();
-            displayMenu();
-
-            cout << "\n\t\t\t\t\t\t\tEnter your choice: ";
-            cin >> choice;
-
-            switch (choice) {
-            case 1:
-                addPrisoner();
-                break;
-            case 2:
-                showPrisonerDetails();
-                break;
-            case 3:
-                manageAttendance();
-                break;
-            case 4:
-                releasePrisoner();
-                break;
-            case 5:
-                searchPrisoner();
-                break;
-            case 6:
-                exportPrisonData();
-                break;
-            case 7:
-                logout();
-                return;
-            case 8:
-                exit();
-                return;
-            default:
-                cout << "\n\t\t\t\tInvalid choice\n";
-                Utils::pause();
-            }
-        } while (true);
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Press 1 to return : ";
+    scanf("%d", &s);
+    if (s == 1)
+    {
+        Prison::Afterlogin();
     }
+}
 
-    void addPrisoner() {
-        Utils::displayHeader("Enter basic information of prisoner");
-
-        // Find an empty cell
-        int index = findFreeCellIndex();
-
-        if (index == -1) {
-            cout << "\n\t\t\t\tNo empty cells available!\n";
-            Utils::pause();
-            return;
+void Prison::Attendance()
+{
+    int s, l, c = 0;
+    char ch;
+    do
+    {
+        system("cls");
+        Time();
+        system("cls");
+        int t;
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    |           Prisoner attendance maintainer          |\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        for (t = 0; t <= 100000000; t++)
+        {
         }
 
-        string firstName, secondName, gender, eyeColor, crime;
-        int age, punishmentMonths;
-        double height;
-
-        cout << "\t\t\t\t\tEnter first name: ";
-        cin >> firstName;
-        cout << "\n\t\t\t\t\tEnter second name: ";
-        cin >> secondName;
-        cout << "\n\t\t\t\t\tEnter gender: ";
-        cin >> gender;
-        cout << "\n\t\t\t\t\tEnter age: ";
-        cin >> age;
-        cout << "\n\t\t\t\t\tEnter height: ";
-        cin >> height;
-        cout << "\n\t\t\t\t\tEnter eye color: ";
-        cin >> eyeColor;
-        cout << "\n\t\t\t\t\tEnter crime: ";
-        cin >> crime;
-        cout << "\n\t\t\t\t\tEnter punishment span in months: ";
-        cin >> punishmentMonths;
-
-        prisoners[index].setFirstName(firstName);
-        prisoners[index].setSecondName(secondName);
-        prisoners[index].setGender(gender);
-        prisoners[index].setAge(age);
-        prisoners[index].setHeight(height);
-        prisoners[index].setEyeColor(eyeColor);
-        prisoners[index].setCrime(crime);
-        prisoners[index].setPunishmentMonths(punishmentMonths);
-        prisoners[index].setOccupied(true);
-
-        cout << "\n\n\t\t\t\t\tYour Cell No is " << prisoners[index].getCellNo() << endl;
-        Utils::pause();
-    }
-
-    void showPrisonerDetails() const {
-        displayPrisonerTable("Prisoner list");
-        Utils::pause();
-    }
-
-    void manageAttendance() {
-        processPrisonerAction([this](int index) {
-            prisoners[index].decreasePunishment();
-            cout << "\n\t\t\t\tPunishment for: " << prisoners[index].getPunishmentMonths() << " months";
-
-            if (prisoners[index].isReadyForRelease()) {
-                cout << "\n\t\t\t\tPrisoner is ready for release";
+        cout << "\n\t\t\t\t\t";
+        cout << "\n===========================================================================================================\n";
+        cout << "NAME\t\t\tCell Block\tAge\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
+        cout << "===========================================================================================================\n";
+        for (int x = 0; x <= 19; x++)
+        {
+            if (First_Name[x] != " ")
+            {
+                cout << First_Name[x] << "" << Second_Name[x] << "\t\t" << CellNo[x] << "\t\t" << Age[x] << "\t" << Gender[x] << "\t" << Height[x] << "\t" << Eyecolor[x] << "\t\t" << Crime[x] << "\t\t" << Punishmentmonths[x] << endl;
+                cout << "\n"
+                    << endl;
+                c++;
             }
-            });
-    }
-
-    void releasePrisoner() {
-        processPrisonerAction([this](int index) {
-            if (prisoners[index].isReadyForRelease()) {
-                cout << "\n\t\t\t\tPrisoner is ready for release";
-                cout << "\n\t\t\t\tPress 1 to release the prisoner: ";
-                int releaseChoice;
-                cin >> releaseChoice;
-
-                if (releaseChoice == 1) {
-                    prisoners[index].clearData();
-                    Utils::displayLoadingAnimation("Processing", 7);
-                    cout << "\n\t\t\t\tPrisoner released successfully";
-                }
+        }
+        if (c != 0)
+        {
+            cout << "\n\t\t\t\t\t";
+            cout << "Enter the cell  block of the prisoner :";
+            scanf("%d", &l);
+            l = l - 1001;
+            cout << "\n\t\t\t\t\t";
+            cout << "Name : ";
+            cout << First_Name[l] << " " << Second_Name[l];
+            Punishmentmonths[l]--;
+            cout << "\n\t\t\t\t\t";
+            cout << "Punishment for :" << Punishmentmonths[l] << " months";
+            if (Punishmentmonths[l] <= 0)
+            {
+                cout << "\n\t\t\t\t\t";
+                cout << "Prisoner is ready for release";
             }
-            else {
-                cout << "\n\t\t\t\tPrisoner is not ready for release";
+            cout << "\n\n";
+            cout << "\n\t\t\t\t\t";
+            cout << "Press y to choose another prisoner and press n to exit :";
+            cin >> ch;
+        }
+        else
+        {
+            int a;
+            cout << "\t\t\t\t\t";
+            cout << "\n";
+            cout << "\t\t\t\t\t";
+            for (a = 0; a <= 100000000; a++)
+            {
             }
-            });
+            cout << "\t\t\t\t                                                    \n";
+            cout << "\t\t\t\t    ------------------------------------------------\n";
+            for (a = 0; a <= 100000000; a++)
+            {
+            }
+            cout << "\t\t\t\t    |             No prisoners present             |\n";
+            for (a = 0; a <= 100000000; a++)
+            {
+            }
+            cout << "\t\t\t\t    ------------------------------------------------\n";
+        }
+
+    } while (ch == 'y');
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Press 1 to return : ";
+    scanf("%d", &s);
+    if (s == 1)
+    {
+        Prison::Afterlogin();
     }
+}
 
-    void searchPrisoner() {
-        Utils::displayHeader("Search Menu");
+void Prison::Release()
+{
+    int s, l, c = 0, r;
+    char ch;
+    do
+    {
+        system("cls");
+        Time();
+        int t;
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    |                Release prisoner                   |\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        for (t = 0; t <= 100000000; t++)
+        {
+        }
 
-        int cellNumber;
-        cout << "\t\t\t\tEnter the prisoner cell id to be searched: ";
-        cin >> cellNumber;
-
+        cout << "\n\t\t\t\t\t";
         cout << "\n===========================================================================================================\n";
         cout << "NAME\t\t\tCell Block\tAge\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
         cout << "===========================================================================================================\n";
 
-        int index = getCellIndexFromNumber(cellNumber);
-        if (index >= 0 && index < static_cast<int>(prisoners.size())) {
-            if (prisoners[index].isCell()) {
-                cout << prisoners[index].getFullName() << "\t\t"
-                    << prisoners[index].getCellNo() << "\t\t"
-                    << prisoners[index].getAge() << "\t"
-                    << prisoners[index].getGender() << "\t"
-                    << prisoners[index].getHeight() << "\t"
-                    << prisoners[index].getEyeColor() << "\t\t"
-                    << prisoners[index].getCrime() << "\t\t"
-                    << prisoners[index].getPunishmentMonths() << endl;
-            }
-            else {
-                cout << "\n\t\t\t\tCell block empty" << endl;
+        for (int x = 0; x <= 19; x++)
+        {
+            if (First_Name[x] != " ")
+            {
+                cout << First_Name[x] << "" << Second_Name[x] << "\t\t" << CellNo[x] << "\t\t" << Age[x] << "\t" << Gender[x] << "\t" << Height[x] << "\t" << Eyecolor[x] << "\t\t" << Crime[x] << "\t\t" << Punishmentmonths[x] << endl;
+                cout << "\n"
+                    << endl;
+                c++;
             }
         }
-        else {
-            cout << "\n\t\t\t\tInvalid cell id" << endl;
-        }
+        if (c != 0)
+        {
+            cout << "\n\t\t\t\t\t";
+            cout << "Enter the cell block of the prisoner :";
+            scanf("%d", &l);
+            l = l - 1001;
+            cout << "\n\t\t\t\t\t";
+            cout << "Name : ";
+            cout << First_Name[l] << " " << Second_Name[l];
+            cout << "\n\t\t\t\t\t";
+            if (Punishmentmonths[l] <= 0)
+            {
+                cout << "\n\t\t\t\t\t";
+                cout << "Prisoner is ready for release";
+                cout << "\n\t\t\t\t\t";
+                cout << "Press 1 to release the prisoner :";
+                cin >> r;
+                if (r == 1)
+                {
+                    First_Name[l] = " ";
+                    Second_Name[l] = " ";
+                    Gender[l] = " ";
+                    Age[l] = 0;
+                    Height[l] = 0;
+                    Eyecolor[l] = " ";
+                    Punishmentmonths[l] = 0;
+                    cout << "\n\t\t\t\t\tProcessing";
 
-        Utils::pause();
+                    for (int process = 0; process < 7; process++)
+                    {
+                        for (int a = 0; a <= 100000000; a++)
+                        {
+                        }
+                        cout << ".";
+                    }
+                    cout << "\n\t\t\t\t\t";
+                    cout << "Prisoner released successfully";
+                }
+            }
+            else
+            {
+                cout << "\n\t\t\t\t\t";
+                cout << "Prisoner is not ready for release";
+            }
+
+            cout << "\n\n";
+            cout << "\n\t\t\t\t\t";
+            cout << "Press y to choose another prisoner and press n to exit :";
+            cin >> ch;
+        }
+        else
+        {
+            int a;
+            cout << "\t\t\t\t\t";
+            cout << "\n";
+            cout << "\t\t\t\t\t";
+            for (a = 0; a <= 100000000; a++)
+            {
+            }
+            cout << "\t\t\t\t                                                    \n";
+            cout << "\t\t\t\t    ------------------------------------------------\n";
+            for (a = 0; a <= 100000000; a++)
+            {
+            }
+            cout << "\t\t\t\t    |             No prisoners present             |\n";
+            for (a = 0; a <= 100000000; a++)
+            {
+            }
+            cout << "\t\t\t\t    ------------------------------------------------\n";
+            break;
+        }
+    } while (ch == 'y');
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Press 1 to return : ";
+    scanf("%d", &s);
+    if (s == 1)
+    {
+        Prison::Afterlogin();
+    }
+}
+
+void Prison::SearchPrison()
+{
+    int info;
+    int CN, i, a, s, l;
+    int c = 0, p = 0;
+
+    system("cls");
+    cout << "\t\t\t\t    ----------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    |             Search Menu              |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    ----------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\n\n";
+    cout << "\t\t\t\t";
+    cout << "Enter the prisoner cell id to be searched : ";
+    cin >> CN;
+    cout << "\n\t\t\t\t";
+    cout << "\n===========================================================================================================\n";
+    cout << "NAME\t\t\tCell Block\tAge\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
+    cout << "===========================================================================================================\n";
+    l = CN - 1001;
+    info = CellNo[l];
+    if (CN == info)
+    {
+        if (First_Name[l] != " ")
+        {
+            cout << First_Name[l] << "" << Second_Name[l] << "\t\t" << CellNo[l] << "\t\t" << Age[l] << "\t" << Gender[l] << "\t" << Height[l] << "\t" << Eyecolor[l] << "\t\t" << Crime[l] << "\t\t" << Punishmentmonths[l] << endl;
+            cout << "\n"
+                << endl;
+        }
+        else
+        {
+            cout << "\n";
+            cout << "\t\t\t\t";
+            cout << "\n";
+            cout << "\t\t\t\t";
+            cout << "cell block empty" << endl;
+        }
+    }
+    else
+    {
+        cout << "\n";
+        cout << "\t\t\t\t";
+        cout << "\n";
+        cout << "\t\t\t\t";
+        cout << "invalid cell id" << endl;
+    }
+    cout << "\n";
+    cout << "\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t";
+    cout << "Press 1 to return : ";
+    scanf("%d", &s);
+    if (s == 1)
+    {
+        Prison::Afterlogin();
+    }
+}
+
+void Prison::PrisonFile()
+{
+    Time();
+    system("cls");
+
+    int format, a;
+    int s, c = 0, p = 0;
+    cout << "\n\n\n";
+    cout << "\t\t\t\t-----------------------------------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t|                                                               |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t|                     1)   Txt File                             |\n";
+    cout << "\t\t\t\t|                                                               |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t|                     2)   Html File                            |\n";
+    cout << "\t\t\t\t|                                                               |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t|                     3)   Word File                            |\n";
+    cout << "\t\t\t\t|                                                               |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t-----------------------------------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\n";
+    cout << "\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t";
+    cout << "In which format you want to open your file? ";
+    cin >> format;
+    std::ofstream MyFile_;
+    switch (format)
+    {
+    case 1:
+        Time();
+        system("cls");
+        cout << "\t\t\t\t\t";
+        cout << "\n";
+        cout << "\t\t\t\t\t";
+        cout << "\n\n\n\n\n";
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    |        Txt File created successfully              |\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+
+        MyFile_.open("Prison_Data.txt");
+
+        MyFile_ << "\t\t\t\t    -----------------------------------------------------\n";
+        MyFile_ << "\t\t\t\t    |                                                                            |\n";
+        MyFile_ << "\t\t\t\t    |                Prisoner list                                     |\n";
+        MyFile_ << "\t\t\t\t    |                                                                            |\n";
+        MyFile_ << "\t\t\t\t    -----------------------------------------------------\n";
+
+        MyFile_ << "\n\t\t\t\t\t";
+
+        MyFile_ << "\n=====================================================================================================================\n";
+        MyFile_ << "SR.\tNAME\t\t\tCell Block\tAge\t\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
+        MyFile_ << "=======================================================================================================================\n";
+
+        for (int x = 0; x <= 19; x++)
+        {
+            if (First_Name[x] != " ")
+            {
+                p++;
+                MyFile_ << p << "\t" << First_Name[x] << "" << Second_Name[x] << "\t\t" << CellNo[x] << "\t" << Age[x] << "\t\t" << Gender[x] << "\t" << Height[x] << "\t\t" << Eyecolor[x] << "\t\t" << Crime[x] << "\t\t" << Punishmentmonths[x] << endl;
+                MyFile_ << "\n"
+                    << endl;
+                c++;
+            }
+        }
+        if (c == 0)
+        {
+            MyFile_ << "\n\t\t\t\t\t";
+            MyFile_ << "No prisoner Present";
+            MyFile_ << "\n";
+            MyFile_ << "\t\t\t\t\t";
+        }
+        MyFile_.close();
+        break;
+
+    case 2:
+        Time();
+        system("cls");
+        cout << "\t\t\t\t\t";
+        cout << "\n";
+        cout << "\t\t\t\t\t";
+        cout << "\n\n\n\n\n";
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    |          Html File created successfully           |\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+
+        MyFile_.open("Prison_Data.html");
+
+        MyFile_ << "\t\t\t\t    -----------------------------------------------------";
+        MyFile_ << "\t\t\t\t    |                                                   |";
+        MyFile_ << "\t\t\t\t    |                Prisoner list                      |";
+        MyFile_ << "\t\t\t\t    |                                                   |";
+        MyFile_ << "\t\t\t\t    -----------------------------------------------------";
+        MyFile_ << "<br>";
+
+        for (int x = 0; x <= 19; x++)
+        {
+            if (First_Name[x] != " ")
+            {
+                MyFile_ << "First name: " << First_Name[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Second name: " << Second_Name[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Cell number: " << CellNo[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Age: " << Age[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Gender: " << Gender[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Height: " << Height[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Eye colour: " << Eyecolor[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Crime: " << Crime[x];
+                MyFile_ << "<br>";
+                MyFile_ << "Punishment Months: " << Punishmentmonths[x];
+                MyFile_ << "<br>";
+                MyFile_ << "<br>";
+                c++;
+            }
+        }
+        if (c == 0)
+        {
+
+            MyFile_ << "<br>\t\t\t\t\t";
+            MyFile_ << "No prisoner Present";
+            MyFile_ << "<br>";
+            MyFile_ << "\t\t\t\t\t";
+        }
+        MyFile_.close();
+        break;
+
+    case 3:
+        Time();
+        system("cls");
+        cout << "\t\t\t\t\t";
+        cout << "\n";
+        cout << "\t\t\t\t\t";
+        cout << "\n\n\n\n\n";
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    |          Word File created successfully           |\n";
+        cout << "\t\t\t\t    |                                                   |\n";
+        cout << "\t\t\t\t    -----------------------------------------------------\n";
+
+        MyFile_.open("Prison_Data.doc");
+
+        MyFile_ << "\t\t\t *** Prisoner list *** ";
+        MyFile_ << "\n";
+
+        for (int x = 0; x <= 19; x++)
+        {
+            if (First_Name[x] != " ")
+            {
+                MyFile_ << "First name: " << First_Name[x];
+                MyFile_ << "\n";
+                MyFile_ << "Second name: " << Second_Name[x];
+                MyFile_ << "\n";
+                MyFile_ << "Cell number: " << CellNo[x];
+                MyFile_ << "\n";
+                MyFile_ << "Age: " << Age[x];
+                MyFile_ << "\n";
+                MyFile_ << "Gender: " << Gender[x];
+                MyFile_ << "\n";
+                MyFile_ << "Height: " << Height[x];
+                MyFile_ << "\n";
+                MyFile_ << "Eye colour: " << Eyecolor[x];
+                MyFile_ << "\n";
+                MyFile_ << "Crime: " << Crime[x];
+                MyFile_ << "\n";
+                MyFile_ << "Punishment Months: " << Punishmentmonths[x];
+                MyFile_ << "\n";
+                MyFile_ << "\n";
+                c++;
+            }
+        }
+        if (c == 0)
+        {
+
+            MyFile_ << "\n\t\t\t\t";
+            MyFile_ << "No prisoner Present";
+            MyFile_ << "\n";
+            MyFile_ << "\t\t\t\t\t";
+        }
+        MyFile_.close();
+        break;
+    default:
+        cout << "Invalid choice";
+        break;
     }
 
-    void exportPrisonData() const {
-        Utils::displayHeader("Export Prison Data");
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "\n";
+    cout << "\t\t\t\t\t";
+    cout << "Press 1 to return : ";
+    scanf("%d", &s);
+    if (s == 1)
+    {
+        Prison::Afterlogin();
+    }
+}
 
+void Prison::Afterlogin()
+{
+    int a, c;
+    int v;
+    do
+    {
+        v = 0;
+        system("cls");
+        Time();
         cout << "\n\n\n";
-        cout << "\t\t\t\t-----------------------------------------------------------------\n";
-        cout << "\t\t\t\t|                                                               |\n";
-        cout << "\t\t\t\t|                     1)   Txt File                             |\n";
-        cout << "\t\t\t\t|                                                               |\n";
-        cout << "\t\t\t\t|                     2)   Html File                            |\n";
-        cout << "\t\t\t\t|                                                               |\n";
-        cout << "\t\t\t\t|                     3)   Word File                            |\n";
-        cout << "\t\t\t\t|                                                               |\n";
-        cout << "\t\t\t\t-----------------------------------------------------------------\n";
-
-        int format;
-        cout << "\n\t\t\t\tIn which format you want to export your file? ";
-        cin >> format;
-
-        unique_ptr<DataExporter> exporter = ExporterFactory::createExporter(format);
-
-        if (exporter) {
-            string fileName;
-
-            switch (format) {
-            case 1: fileName = "Prison_Data.txt"; break;
-            case 2: fileName = "Prison_Data.html"; break;
-            case 3: fileName = "Prison_Data.doc"; break;
-            default: cout << "\n\t\t\t\tInvalid format!"; Utils::pause(); return;
-            }
-
-            exporter->exportData(prisoners, fileName);
-
-            string successTitle;
-            switch (format) {
-            case 1: successTitle = "Txt File created successfully"; break;
-            case 2: successTitle = "Html File created successfully"; break;
-            case 3: successTitle = "Word File created successfully"; break;
-            }
-
-            Utils::displayHeader(successTitle);
+        cout << "\t\t\t\t---------------------------------------------------------------------------\n";
+        for (a = 0; a <= 100000000; a++)
+        {
         }
-        else {
-            cout << "\n\t\t\t\tInvalid choice!\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
         }
+        cout << "\t\t\t\t|                     1)   New prisoner entry                             |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     2)   Prisoner details                               |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     3)   Attendace prisoner                             |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     4)   Release prisoner                               |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     5)   Search prisoner                                |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     6)   Prison File                                    |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     7)   Logout                                         |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                     8)   Exit                                           |\n";
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t|                                                                         |\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\t\t\t\t---------------------------------------------------------------------------\n";
+        for (a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << "\n";
+        cout << "\t\t\t\t\t\t\t";
+        cout << "\n";
+        cout << "\t\t\t\t\t\t\t";
+        cout << "Enter your choice : ";
+        cin >> c;
+        switch (c)
+        {
+        case 1:
+            Prison::SetData();
+            break;
+        case 2:
+            Prison::Details();
+            break;
+        case 3:
+            Prison::Attendance();
+            break;
+        case 4:
+            Prison::Release();
+            break;
+        case 5:
+            Prison::SearchPrison();
+            break;
+        case 6:
+            Prison::PrisonFile();
+            break;
+        case 7:
+            Prison::Logout();
+            break;
+        case 8:
+            Prison::Exit();
+            break;
+        default:
+            cout << "\n\t\t\t\tInvalid choice\n";
+            cout << "\t\t\t\tPress 1 to return : ";
+            cin >> v;
+        }
+    } while (v == 1);
+}
 
-        Utils::pause();
+void Prison::Exit()
+{
+    system("cls");
+    Time();
+    cout << "\n\n\n\n\n\n\t\t\t\t\t\t";
+    cout << "Thank you!!";
+    cout << "\n\n\n\n\n\n\t\t\t\t\t\t";
+    _getch();
+}
+
+void Date()
+{
+    time_t T = time(NULL);
+    struct tm tm = *localtime(&T);
+    cout << "\n\n\n";
+    cout << "\t\t\t\t\t   Date: " << tm.tm_mday << "/" << tm.tm_mon + 1 << "/" << tm.tm_year + 1900 << "\n";
+}
+
+void Time()
+{
+    time_t curr_time;
+    curr_time = time(NULL);
+
+    tm* tm_local = localtime(&curr_time);
+    cout << "Time : " << tm_local->tm_hour << ":" << tm_local->tm_min << ":" << tm_local->tm_sec << endl;
+}
+
+void FrontPage()
+{
+    int process = 0;
+    system("cls");
+    Time();
+    Date();
+    cout << "\n";
+    int a;
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    ----------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    |   PRISON STATION MANAGEMENT SYSTEM   |\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\t\t\t\t    ----------------------------------------\n";
+    for (a = 0; a <= 100000000; a++)
+    {
+    }
+    cout << "\n\n";
+    cout << "\t\t\t\t";
+    for (a = 0; a <= 100000000; a++)
+    {
     }
 
-    void logout() {
-        Utils::clearScreen();
-        Utils::displayLoadingAnimation("Logging out", 15);
-        authManager.logout();
+    cout << "Mini Project   ";
+    for (a = 0; a <= 100000000; a++)
+    {
     }
-
-    void exit() const {
-        Utils::clearScreen();
-        Utils::displayDateTime();
-        cout << "\n\n\n\n\n\n\t\t\t\t\t\tThank you!!\n\n\n\n\n\n\t\t\t\t\t\t";
-        _getch();
+    cout << ":";
+    for (a = 0; a <= 100000000; a++)
+    {
     }
-};
+    cout << "   Prison Management System";
+    cout << "\n\n";
+    cout << "\t\t\t\t";
+    cout << "\n\n";
+    cout << "\n\n";
+    cout << "\t\t\t\t";
+    system("pause");
+    cout << "\n\t\t\t\tLoading";
 
-int main() {
-    PrisonManagementSystem system;
-    system.run();
+    for (process = 0; process < 15; process++)
+    {
+        for (int a = 0; a <= 100000000; a++)
+        {
+        }
+        cout << ".";
+    }
+}
+
+int main()
+{
+    Prison a;
+
+    FrontPage();
+    a.Login();
     return 0;
 }
