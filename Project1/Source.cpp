@@ -33,15 +33,14 @@ public:
             << setfill('0') << setw(2) << localTime->tm_min << ":"
             << setfill('0') << setw(2) << localTime->tm_sec << endl;
 
-        cout << "\n\n\n";
-        cout << "\t\t\t\t\t   Date: " << localTime->tm_mday << "/"
+        cout << "Date: " << localTime->tm_mday << "/"
             << localTime->tm_mon + 1 << "/" << localTime->tm_year + 1900 << "\n";
     }
 
     static void displayLoadingAnimation(const string& message, int numDots = 15) {
         cout << "\n\t\t\t\t" << message;
         for (int i = 0; i < numDots; i++) {
-            Sleep(100);
+            Sleep(30);
             cout << ".";
         }
         cout << endl;
@@ -53,7 +52,7 @@ public:
 
         cout << "\t\t\t\t    -----------------------------------------------------\n";
         cout << "\t\t\t\t    |                                                   |\n";
-        cout << "\t\t\t\t    |       " << left << setw(40) << title << "|\n";
+        cout << "\t\t\t\t    |\t\t\t" << left << setfill(' ') << setw(32) << title << "|\n";
         cout << "\t\t\t\t    |                                                   |\n";
         cout << "\t\t\t\t    -----------------------------------------------------\n\n";
     }
@@ -310,13 +309,13 @@ public:
             cout << "\t\t\t\t\tUsername: ";
             cin >> username;
 
-            cout << "\t\t\t\t\t\nPassword: ";
+            cout << "\n\t\t\t\t\tPassword: ";
             password = Utils::securePasswordInput();
 
             if (validateCredentials(username, password)) {
                 cout << "\n\n\t\t\t\tYou are accessed to the system!\n\n";
                 cout << "\t\t\t\t";
-                system("pause");
+				Utils::pause();
                 isLoggedIn = true;
                 return true;
             }
@@ -327,13 +326,13 @@ public:
                 cout << "\t\t\t\t\tNo. of attempts remain: "
                     << Constants::MAX_LOGIN_ATTEMPTS - attempts;
                 cout << "\n\n\t\t\t\t";
-                system("pause");
+                Utils::pause();
             }
         }
 
         cout << "\n\t\t\t\tNo permission to enter the system!\n\n";
         cout << "\t\t\t\t";
-        system("pause");
+        Utils::pause();
         return false;
     }
 
@@ -492,7 +491,7 @@ public:
 
         cout << "\n\n\t\t\t\tMini Project   :   Prison Management System";
         cout << "\n\n\n\n\n\t\t\t\t";
-        system("pause");
+        Utils::pause();
 
         Utils::displayLoadingAnimation("Loading", 15);
     }
@@ -558,19 +557,19 @@ public:
 
         cout << "\t\t\t\t\tEnter first name: ";
         cin >> firstName;
-        cout << "\t\t\t\t\t\nEnter second name: ";
+        cout << "\n\t\t\t\t\tEnter second name: ";
         cin >> secondName;
-        cout << "\t\t\t\t\t\nEnter gender: ";
+        cout << "\n\t\t\t\t\tEnter gender: ";
         cin >> gender;
-        cout << "\t\t\t\t\t\nEnter age: ";
+        cout << "\n\t\t\t\t\tEnter age: ";
         cin >> age;
-        cout << "\t\t\t\t\t\nEnter height: ";
+        cout << "\n\t\t\t\t\tEnter height: ";
         cin >> height;
-        cout << "\t\t\t\t\t\nEnter eye color: ";
+        cout << "\n\t\t\t\t\tEnter eye color: ";
         cin >> eyeColor;
-        cout << "\t\t\t\t\t\nEnter crime: ";
+        cout << "\n\t\t\t\t\tEnter crime: ";
         cin >> crime;
-        cout << "\t\t\t\t\t\nEnter punishment span in months: ";
+        cout << "\n\t\t\t\t\tEnter punishment span in months: ";
         cin >> punishmentMonths;
 
         prisoners[index].setFirstName(firstName);
