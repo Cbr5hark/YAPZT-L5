@@ -1,5 +1,9 @@
+//Prison management system
+
+// username = admin
+// password = pass
+
 #define _CRT_SECURE_NO_WARNINGS
-// Prison Management System - Refactored Version
 
 #include <iostream>
 #include <conio.h>
@@ -10,8 +14,6 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
-#include <functional>
-#include <memory>
 
 using namespace std;
 
