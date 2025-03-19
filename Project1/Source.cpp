@@ -27,14 +27,15 @@ class Utils {
 public:
     static void displayDateTime() {
         time_t currentTime = time(nullptr);
-        tm* localTime = localtime(&currentTime);
+        tm timeInfo;
+		localtime_s(&timeInfo, &currentTime);
 
-        cout << "Time: " << setfill('0') << setw(2) << localTime->tm_hour << ":"
-            << setfill('0') << setw(2) << localTime->tm_min << ":"
-            << setfill('0') << setw(2) << localTime->tm_sec << endl;
+        cout << "Time: " << setfill('0') << setw(2) << timeInfo.tm_hour << ":"
+            << setfill('0') << setw(2) << timeInfo.tm_min << ":"
+            << setfill('0') << setw(2) << timeInfo.tm_sec << endl;
 
-        cout << "Date: " << localTime->tm_mday << "/"
-            << localTime->tm_mon + 1 << "/" << localTime->tm_year + 1900 << "\n";
+        cout << "Date: " << timeInfo.tm_mday << "/"
+            << timeInfo.tm_mon + 1 << "/" << timeInfo.tm_year + 1900 << "\n";
     }
 
     static void displayLoadingAnimation(const string& message, int numDots = 15) {
@@ -52,7 +53,16 @@ public:
 
         cout << "\t\t\t\t    -----------------------------------------------------\n";
         cout << "\t\t\t\t    |                                                   |\n";
-        cout << "\t\t\t\t    |\t\t\t" << left << setfill(' ') << setw(32) << title << "|\n";
+
+        int total_width = 51;
+        int text_width = title.length();
+        int left_padding = (total_width - text_width) / 2;
+        int right_padding = total_width - text_width - left_padding;
+
+        cout << "\t\t\t\t    |" << setfill(' ') << setw(left_padding) << " "
+            << title
+            << setfill(' ') << setw(right_padding) << " " << "|\n";
+
         cout << "\t\t\t\t    |                                                   |\n";
         cout << "\t\t\t\t    -----------------------------------------------------\n\n";
     }
@@ -361,19 +371,25 @@ private:
         Utils::displayHeader(title);
 
         cout << "\n===========================================================================================================\n";
-        cout << "NAME\t\t\tCell Block\tAge\tGender\tHeight\tEye Colour\tCrime\tPunishment\n";
+        cout << left << setw(20) << "NAME"
+            << setw(15) << "Cell Block"
+            << setw(8) << "Age"
+            << setw(10) << "Gender"
+            << setw(10) << "Height"
+            << setw(15) << "Eye Colour"
+            << setw(15) << "Crime"
+            << "Punishment\n";
         cout << "===========================================================================================================\n";
-
         int count = 0;
         for (const auto& prisoner : prisoners) {
             if (prisoner.isCell()) {
-                cout << prisoner.getFullName() << "\t\t"
-                    << prisoner.getCellNo() << "\t\t"
-                    << prisoner.getAge() << "\t"
-                    << prisoner.getGender() << "\t"
-                    << prisoner.getHeight() << "\t"
-                    << prisoner.getEyeColor() << "\t\t"
-                    << prisoner.getCrime() << "\t\t"
+                cout << left << setw(20) << prisoner.getFullName()
+                    << setw(15) << prisoner.getCellNo()
+                    << setw(8) << prisoner.getAge()
+                    << setw(10) << prisoner.getGender()
+                    << setw(10) << prisoner.getHeight()
+                    << setw(15) << prisoner.getEyeColor()
+                    << setw(15) << prisoner.getCrime()
                     << prisoner.getPunishmentMonths() << endl;
                 cout << "\n";
                 count++;
@@ -430,13 +446,13 @@ private:
         return index >= 0 && index < static_cast<int>(prisoners.size()) && prisoners[index].isCell();
     }
 
-    void processPrisonerAction(const function<void(int)>& action) {
+    template <typename Action>
+    void processPrisonerAction(const Action& action) {
         char choice;
         do {
             displayPrisonerTable("Prisoner Management");
 
             if (!hasPrisoners()) {
-                cout << "\n\t\t\t\tNo prisoners present!\n";
                 Utils::pause();
                 return;
             }
@@ -480,7 +496,7 @@ public:
         }
     }
 
-    void frontPage() {
+    void frontPage() const {
         Utils::clearScreen();
         Utils::displayDateTime();
 
@@ -586,7 +602,7 @@ public:
         Utils::pause();
     }
 
-    void showPrisonerDetails() {
+    void showPrisonerDetails() const {
         displayPrisonerTable("Prisoner list");
         Utils::pause();
     }
@@ -656,7 +672,7 @@ public:
         Utils::pause();
     }
 
-    void exportPrisonData() {
+    void exportPrisonData() const {
         Utils::displayHeader("Export Prison Data");
 
         cout << "\n\n\n";
@@ -710,7 +726,7 @@ public:
         authManager.logout();
     }
 
-    void exit() {
+    void exit() const {
         Utils::clearScreen();
         Utils::displayDateTime();
         cout << "\n\n\n\n\n\n\t\t\t\t\t\tThank you!!\n\n\n\n\n\n\t\t\t\t\t\t";
